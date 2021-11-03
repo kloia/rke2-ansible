@@ -1,0 +1,14 @@
+---
+
+- name: Populate services facts
+  ansible.builtin.service_facts:
+
+- name: Set Active Node
+  ansible.builtin.set_fact:
+    active_node: "{{ inventory_hostname }}"
+  delegate_facts: true
+  delegate_to: "{{ item }}"
+  with_items: "{{ groups['k8s'] }}"
+  when:
+    - inventory_hostname in groups['servers']
+    - ansible_facts.services["rke2-server.service"].state == "running"

@@ -1,0 +1,53 @@
+---
+
+- name: Create the RKE2 config dir
+  ansible.builtin.file:
+    state: directory
+    path: /etc/rancher/rke2
+    owner: root
+    group: root
+    mode: 0755
+
+- name: Copy kubeconfig
+  ansible.builtin.template:
+    src: templates/config.yaml.j2
+    dest: /etc/rancher/rke2/config.yaml
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Copy Containerd Registry Configuration file
+  ansible.builtin.template:
+    src: templates/registries.yaml.j2
+    dest: /etc/rancher/rke2/registries.yaml
+    owner: root
+    group: root
+    mode: 0644
+  when: rke2_custom_registry is true
+
+- name: Start RKE2 service on the first server
+  ansible.builtin.systemd:
+    name: "rke2-server.service"
+    state: started
+    enabled: true
+  environment:
+    RKE2_TOKEN: "{{ rke2_token }}"
+
+- name: Wait for the first server be ready
+  shell: |
+   set -o pipefail
+   /var/lib/rancher/rke2/bin/kubectl --kubeconfig /etc/rancher/rke2/rke2.yaml get nodes | grep "Ready"
+  args:
+    executable: /bin/bash
+  changed_when: false
+  register: first_node
+  until:
+    - '" Ready "  in first_node.stdout'
+  retries: 40
+  delay: 15
+
+- name: Set an Active Node variable
+  ansible.builtin.set_fact:
+    active_node: "{{ inventory_hostname }}"
+    rke2_api_ip: "{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}"
+  run_once: yes

@@ -1,0 +1,14 @@
+mirrors:
+  docker.io:
+    endpoint:
+      - "https://hub.local.net:5000"
+configs:
+  "hub.local.net:5000":
+    auth:
+      username: ***** # registry username
+      password: ***** # registry password
+    tls:
+      cert_file:            # tls cert file for authentication
+      key_file:             # tls key file for authentication
+      ca_file:              # ca file used to verify the tls certificate
+      insecure_skip_verify: # skip verifying the registry's certificate

@@ -1,0 +1,46 @@
+global_defs {
+}
+
+vrrp_script check {
+    script "/etc/keepalived/check.sh"
+    interval 2
+    weight -5
+    fall 3
+    rise 2
+}
+
+vrrp_instance VI_1 {
+    interface {{ ansible_default_ipv4.interface }}
+    virtual_router_id 11
+{% if groups.servers.0 == inventory_hostname|string() %}
+    state MASTER
+{% else %}
+    state BACKUP
+{% endif %}
+{% for host in groups.servers %}
+    {%- if host|string() == inventory_hostname|string() %}
+    priority {{ 150 - loop.index0 }}
+    {% endif -%}
+{% endfor %}
+    advert_int 1
+    unicast_src_ip {{ ansible_default_ipv4.address }}
+    unicast_peer {
+{% for host in groups['servers'] %}
+{% if host|string() != inventory_hostname|string() %}
+        {{ hostvars[host]['ansible_default_ipv4']['address'] }}
+{% endif %}
+{% endfor %}
+    }
+    authentication {
+        auth_type PASS
+        auth_pass rke2kloiapass
+    }
+### The following entry is the VRRP config for the incomming interface ###
+
+        virtual_ipaddress {
+            {{ rke2_api_ip }}
+    }
+        track_script {
+       check
+    }
+}

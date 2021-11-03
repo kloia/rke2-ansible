@@ -1,0 +1,9 @@
+- hosts: servers,agents
+  become: true
+  gather_facts: true
+  roles:
+    - pre
+    - rke2
+    - post
+  vars_files:
+    - ../vars/general-config.yml
