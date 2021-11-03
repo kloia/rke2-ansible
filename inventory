@@ -1,0 +1,16 @@
+[jump]
+localhost ansible_connection=local ansible_python_interpreter=python3
+
+[servers]
+node1  ansible_host="{{ node1_ip }}" rke2_type="{{ node1_type }}"
+
+[agents]
+node2  ansible_host="{{ node2_ip }}" rke2_type="{{ node2_type }}"
+
+[all:vars]
+ansible_user={{ ssh_user }}
+ansible_ssh_private_key_file={{ ssh_key_path }}
+
+[k8s:children]
+servers
+agents

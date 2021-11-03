@@ -1,0 +1,34 @@
+---
+
+- name: Populate services facts
+  ansible.builtin.service_facts:
+  when:
+    - rke2_ha_mode
+
+- name: Run RKE2 script
+  ansible.builtin.shell:
+    cmd: /tmp/rke2.sh
+  environment:
+    INSTALL_RKE2_VERSION: "{{ rke2_version }}"
+    INSTALL_RKE2_CHANNEL_URL: "{{ rke2_channel_url }}"
+    INSTALL_RKE2_CHANNEL: "{{ rke2_channel }}"
+    INSTALL_RKE2_METHOD: "{{ rke2_method }}"
+  when: (rke2_version != ( installed_rke2_version.stdout | default({})))
+        or installed_rke2_version is not defined
+
+- name: Get Active Server
+  include_tasks: get_active_node.yml
+  when:
+    - rke2_ha_mode
+
+- name: Prepare first node in the cluster
+  include_tasks: first_node.yml
+  when:
+    - inventory_hostname == groups.servers.0
+    - active_node is not defined
+    - rke2_ha_mode
+
+- name: Prepare and join nodes of the cluster
+  include_tasks: join_node.yml
+  when:
+    - active_node is defined

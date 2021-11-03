@@ -1,0 +1,20 @@
+#---
+
+# - name: Download RKE2 kubeconfig to localhost
+#   ansible.builtin.fetch:
+#     src: /etc/rancher/rke2/rke2.yaml
+#     dest: ../../rke2.yaml
+#     flat: yes
+#   delegate_to: "{{ groups.servers.0 }}"
+#   run_once: true
+#   when:
+#   - rke2_download_kubeconf
+
+# - name: Replace loopback IP by server IP
+#   ansible.builtin.replace:
+#     path: ../../rke2.yaml
+#     regexp: '127.0.0.1'
+#     replace: "{{ rke2_api_ip | default(hostvars[groups.servers.0]['ansible_default_ipv4']['address']) }}"
+#   delegate_to: localhost
+#   when:
+#   - rke2_download_kubeconf

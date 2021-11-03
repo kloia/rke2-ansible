@@ -1,0 +1,22 @@
+{% if active_node is defined %}
+server: https://{{ rke2_api_ip }}:9345
+{% endif %}
+token: {{ rke2_token }}
+{% if ansible_fqdn in groups['servers'] %}
+{% if rke2_node_taint %}
+node-taint:
+  - "CriticalAddonsOnly=true:NoExecute"
+{% endif %}
+tls-san:
+  - cluster.local
+{% if rke2_api_ip is defined %}
+  - {{ rke2_api_ip }}
+{% endif %}
+{% endif %}
+{% if rke2_disabled and ( inventory_hostname|string() in groups['servers'] ) %}
+disable: {{ rke2_disable }}
+{% endif %}
+{% if rke2_apiserver_args is defined and ansible_fqdn in groups['servers'] %}
+kube-apiserver-arg: {{ rke2_apiserver_args}}
+{% endif %}
+snapshotter: {{ rke2_containerd_snapshooter }}
