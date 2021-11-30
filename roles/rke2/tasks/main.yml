@@ -3,7 +3,7 @@
 - name: Populate services facts
   ansible.builtin.service_facts:
   when:
-    - rke2_ha_mode
+    - rke2_lb_mode
 
 - name: Run RKE2 script
   ansible.builtin.shell:
@@ -19,16 +19,17 @@
 - name: Get Active Server
   include_tasks: get_active_node.yml
   when:
-    - rke2_ha_mode
+    - rke2_lb_mode
 
 - name: Prepare first node in the cluster
   include_tasks: first_node.yml
   when:
     - inventory_hostname == groups.servers.0
     - active_node is not defined
-    - rke2_ha_mode
+    - rke2_lb_mode
 
 - name: Prepare and join nodes of the cluster
   include_tasks: join_node.yml
   when:
+    - inventory_hostname != groups.servers.0
     - active_node is defined

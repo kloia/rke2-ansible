@@ -13,7 +13,7 @@ tls-san:
   - {{ rke2_api_ip }}
 {% endif %}
 {% endif %}
-{% if rke2_disabled and ( inventory_hostname|string() in groups['servers'] ) %}
+{% if rke2_disabled_components and ( inventory_hostname|string() in groups['servers'] ) %}
 disable: {{ rke2_disable }}
 {% endif %}
 {% if rke2_apiserver_args is defined and ansible_fqdn in groups['servers'] %}

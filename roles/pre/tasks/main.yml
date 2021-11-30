@@ -5,7 +5,7 @@
   when:
     - rke2_api_ip is defined
     - inventory_hostname is in groups.servers
-    - rke2_ha_mode
+    - rke2_lb_mode
 
 - name: Populate services facts
   ansible.builtin.service_facts:

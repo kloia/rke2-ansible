@@ -1,10 +1,6 @@
 ---
 
-# node(s) specifications
-node1_ip: x.x.x.x
-node1_type: server
-node2_ip: x.x.x.x
-node2_type: agent
+# node(s) specifications can be define in inventory file
 
 # SSH user
 ssh_user: ubuntu
@@ -12,10 +8,7 @@ ssh_user: ubuntu
 # SSH Key
 ssh_key_path: /tmp/id_rsa
 
-# AWS integration (when using ha and elb)
-aws_enabled: false
-
-# RKE2 installation method (for cross installarion only supoport tar)
+# RKE2 installation method (for cross installation only supoport tar)
 rke2_method: tar
 
 # RKE2 version 
@@ -27,8 +20,8 @@ rke2_channel: stable
 # RKE2 repository URL
 rke2_channel_url: https://update.rke2.io/v1-release/channels
 
-# HA mode - disabled, keepalived, elb (aws only)
-rke2_ha_mode: disabled
+# HA mode - disabled, keepalived, external LB (aws, gcp, azure or differen LB's)
+rke2_lb_mode: disabled
 
 # API Server port
 rke2_apiserver_port: 6443
@@ -40,7 +33,7 @@ rke2_apiserver_port: 6443
 rke2_token: defaultSecret12345
 
 # Do not deploy components or delete any components - rke2-canal, rke2-coredns, rke2-ingress-nginx, rke2-kube-proxy, rke2-metrics-server
-rke2_disabled:
+rke2_disabled_components:
 
 # Custom manifests path for RKE2 installation
 rke2_custom_manifests_path:
