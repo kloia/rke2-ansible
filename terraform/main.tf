@@ -5,7 +5,7 @@ module "rke-cluster" {
   create_spot_instance   = true
   #spot_price             = "0.60"
   spot_type              = "one-time"
-  count                  = 2
+  count                  = 5
   ami                    = "ami-0a8e758f5e873d1c1"
   instance_type          = "t3.xlarge"
   key_name               = "poc"

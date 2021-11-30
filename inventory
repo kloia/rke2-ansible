@@ -2,10 +2,14 @@
 localhost ansible_connection=local ansible_python_interpreter=python3
 
 [servers]
-node1  ansible_host="{{ node1_ip }}" rke2_type="{{ node1_type }}"
+# node1_ip rke2_type="server"
+# node2_ip rke2_type="server"
+# node3_ip rke2_type="server"
+
 
 [agents]
-node2  ansible_host="{{ node2_ip }}" rke2_type="{{ node2_type }}"
+# node4_ip rke2_type="agent"
+# node5_ip rke2_type="agent"
 
 [all:vars]
 ansible_user={{ ssh_user }}
