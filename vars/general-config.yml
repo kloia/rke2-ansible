@@ -46,3 +46,9 @@ rke2_apiserver_args: []
 
 # Override default containerd snapshotter
 rke2_containerd_snapshooter: overlayfs
+
+# Override default cluster cidr range
+rke2_cluster_cidr:
+
+# Override default service cidr range
+rke2_service_cidr:
