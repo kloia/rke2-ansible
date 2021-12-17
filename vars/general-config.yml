@@ -6,13 +6,13 @@
 ssh_user: ubuntu
 
 # SSH Key
-ssh_key_path: /tmp/id_rsa
+ssh_key_path: /app/id_rsa
 
 # RKE2 installation method (for cross installation only supoport tar)
 rke2_method: tar
 
 # RKE2 version 
-rke2_version: v1.21.5+rke2r2
+rke2_version: v1.22.3+rke2r1
 
 # RKE2 channel
 rke2_channel: stable
