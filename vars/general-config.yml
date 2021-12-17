@@ -12,7 +12,7 @@ ssh_key_path: /app/id_rsa
 rke2_method: tar
 
 # RKE2 version 
-rke2_version: v1.22.3+rke2r1
+rke2_version: v1.21.5+rke2r1
 
 # RKE2 channel
 rke2_channel: stable
@@ -48,7 +48,7 @@ rke2_apiserver_args: []
 rke2_containerd_snapshooter: overlayfs
 
 # Override default cluster cidr range
-rke2_cluster_cidr:
+rke2_cluster_cidr: 10.42.0.0/16
 
 # Override default service cidr range
-rke2_service_cidr:
+rke2_service_cidr: 10.43.0.0/16
