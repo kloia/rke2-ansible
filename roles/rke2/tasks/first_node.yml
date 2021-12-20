@@ -45,9 +45,3 @@
     - '" Ready "  in first_node.stdout'
   retries: 40
   delay: 15
-
-- name: Set an Active Node variable
-  ansible.builtin.set_fact:
-    active_node: "{{ inventory_hostname }}"
-    rke2_api_ip: "{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}"
-  run_once: yes
