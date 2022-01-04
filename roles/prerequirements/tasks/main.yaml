@@ -1,0 +1,146 @@
+- name: Add pam_limits.so to common-session
+  blockinfile:
+    path: /etc/pam.d/common-session
+    create: false
+    block: |
+      session required pam_limits.so
+
+- name: Add pam_limits.so to common-session-noninteractive
+  blockinfile:
+    path: /etc/pam.d/common-session-noninteractive
+    create: false
+    block: |
+      session required pam_limits.so
+
+- name: Insert a new rule pam_wheel.so with argument 'use_uid' after an \
+        existing rule pam_rootok.so
+  community.general.pamd:
+    name: su
+    type: session
+    control: required
+    module_path: pam_systemd.so
+    new_type: session
+    new_control: required
+    new_module_path: pam_limits.so
+    state: after
+
+- name: Add or modify hard nofile limits for root
+  community.general.pam_limits:
+    domain: root
+    limit_type: hard
+    limit_item: nofile
+    value: 1024000
+
+- name: Add or modify hard nofile limits for root
+  community.general.pam_limits:
+    domain: root
+    limit_type: hard
+    limit_item: nproc
+    value: 1024000
+
+- name: Add or modify soft nofile limits for root
+  community.general.pam_limits:
+    domain: root
+    limit_type: soft
+    limit_item: nofile
+    value: 1024000
+
+- name: Add or modify soft nofile limits for root
+  community.general.pam_limits:
+    domain: root
+    limit_type: soft
+    limit_item: nproc
+    value: 1024000
+
+- name: Add or modify hard nofile limits for wildcard domain
+  community.general.pam_limits:
+    domain: '*'
+    limit_type: hard
+    limit_item: nofile
+    value: 1024000
+
+- name: Add or modify hard nofile limits for wildcard domain
+  community.general.pam_limits:
+    domain: '*'
+    limit_type: hard
+    limit_item: nproc
+    value: 1024000
+
+- name: Add or modify soft nofile limits for wildcard domain
+  community.general.pam_limits:
+    domain: '*'
+    limit_type: soft
+    limit_item: nofile
+    value: 1024000
+
+- name: Add or modify soft nofile limits for wildcard domain
+  community.general.pam_limits:
+    domain: '*'
+    limit_type: soft
+    limit_item: nproc
+    value: 1024000
+
+- name: Add the br_netfilter module
+  modprobe:
+    name: br_netfilter
+    state: present
+
+- name: Add the br_netfilter module
+  modprobe:
+    name: br_netfilter
+    state: present
+
+- name: Enable ip_forward
+  sysctl:
+    name: net.ipv4.ip_forward
+    value: '1'
+    sysctl_set: yes
+    state: present
+    reload: yes
+
+
+- name: Enable bridge ipv4
+  sysctl:
+    name: net.bridge.bridge-nf-call-iptables
+    value: '1'
+    sysctl_set: yes
+    state: present
+    reload: yes
+
+  
+- name:  Enable bridge ipv6
+  sysctl:
+    name: net.bridge.bridge-nf-call-ip6tables
+    value: '1'
+    sysctl_set: yes
+    state: present
+    reload: yes
+
+- name: Log rotation
+  blockinfile:
+    path: /etc/logrotate.d/allcontainerlogs
+    create: true
+    block: |
+      {
+      rotate 5
+      daily
+      dateext
+      maxsize 250M
+      missingok
+      compress
+      copytruncate
+      dateformat -%Y%m%d%H%M%S
+      create 0644 root root
+      }
+
+- name: Configure rke2 prerequirements
+  blockinfile:
+    path: /etc/modules-load.d/k8s.conf
+    create: true
+    block: |
+      {
+      vm.panic_on_oom=0
+      vm.overcommit_memory=1
+      kernel.panic=10
+      kernel.panic_on_oops=1
+      }
