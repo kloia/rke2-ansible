@@ -20,11 +20,13 @@ disable: {{ rke2_disable }}
 kube-apiserver-arg: {{ rke2_apiserver_args}}
 {% endif %}
 snapshotter: {{ rke2_containerd_snapshooter }}
+{% if rke2_type == 'server' %}
 {% if rke2_cluster_cidr is defined %}
 cluster-cidr: {{ rke2_cluster_cidr }}
 {% endif %}
 {% if rke2_service_cidr is defined %}
 service-cidr: {{ rke2_service_cidr}}
+{% endif %}
 {% endif %}
 {% if rke2_disable_cloud_controller is defined %}
 disable-cloud-controller: true

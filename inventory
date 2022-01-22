@@ -6,7 +6,6 @@ localhost ansible_connection=local ansible_python_interpreter=python3
 # node2_ip rke2_type="server"
 # node3_ip rke2_type="server"
 
-
 [agents]
 # node4_ip rke2_type="agent"
 # node5_ip rke2_type="agent"
