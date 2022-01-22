@@ -26,3 +26,6 @@ cluster-cidr: {{ rke2_cluster_cidr }}
 {% if rke2_service_cidr is defined %}
 service-cidr: {{ rke2_service_cidr}}
 {% endif %}
+{% if rke2_disable_cloud_controller is defined %}
+disable-cloud-controller: true
+{% endif %}
