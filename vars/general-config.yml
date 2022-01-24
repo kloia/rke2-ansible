@@ -1,6 +1,6 @@
 ---
 
-# node(s) specifications can be define in inventory file
+# node(s) specifications can be defined in inventory file
 
 # SSH user
 ssh_user: ubuntu
@@ -8,7 +8,7 @@ ssh_user: ubuntu
 # SSH Key
 ssh_key_path: /app/id_rsa
 
-# RKE2 installation method (for cross installation only supoport tar)
+# RKE2 installation method (for cross installation, only supports tar)
 rke2_method: tar
 
 # RKE2 version 
@@ -20,7 +20,7 @@ rke2_channel: stable
 # RKE2 repository URL
 rke2_channel_url: https://update.rke2.io/v1-release/channels
 
-# HA mode - disabled, keepalived, external LB (aws, gcp, azure or differen LB's)
+# HA mode - disabled, keepalived, external LB (aws, gcp, azure or different LB's)
 rke2_lb_mode: disabled
 
 # API Server port
@@ -52,3 +52,6 @@ rke2_cluster_cidr: 10.42.0.0/16
 
 # Override default service cidr range
 rke2_service_cidr: 10.43.0.0/16
+
+# Override default rke2 cloud controller
+rke2_disable_cloud_controller: false
