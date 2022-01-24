@@ -54,4 +54,4 @@ rke2_cluster_cidr: 10.42.0.0/16
 rke2_service_cidr: 10.43.0.0/16
 
 # Override default rke2 cloud controller
-# rke2_disable_cloud_controller: true
+rke2_disable_cloud_controller: false
