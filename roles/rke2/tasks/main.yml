@@ -28,6 +28,12 @@
     - active_node is not defined
     - rke2_lb_mode
 
+- name: Set an Active Node variable
+  ansible.builtin.set_fact:
+    active_node: "{{ inventory_hostname }}"
+    rke2_api_ip: "{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}"
+  run_once: yes
+
 - name: Prepare and join nodes of the cluster
   include_tasks: join_node.yml
   when:
