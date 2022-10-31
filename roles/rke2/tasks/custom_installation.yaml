@@ -1,0 +1,26 @@
+- name: Link kubectl as k
+  shell: ln -s /var/lib/rancher/rke2/bin/kubectl /usr/bin/k
+
+- name: Link kubectl as kubectl
+  shell: ln -s /var/lib/rancher/rke2/bin/kubectl /usr/bin/kubectl
+
+- name: Add KUBECONFIG to bashrc
+  shell: echo "export KUBECONFIG=/etc/rancher/rke2/rke2.yaml">>/root/.bashrc
+
+- name: Install helm 
+  shell: curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
+
+- name: Download Kubectx
+  shell: git clone https://github.com/ahmetb/kubectx /opt/kubectx
+
+- name: Link kubectx
+  shell: ln -s /opt/kubectx/kubectx /usr/local/bin/kubectx
+
+- name: Link kubectx as kx
+  shell: ln -s /opt/kubectx/kubectx /usr/local/bin/kx
+
+- name: Link kubens
+  shell: ln -s /opt/kubectx/kubens /usr/local/bin/kubens
+
+- name: Link kubens as kn
+  shell: ln -s /opt/kubectx/kubens /usr/local/bin/kn

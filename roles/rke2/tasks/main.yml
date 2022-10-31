@@ -1,5 +1,9 @@
 ---
 
+- name: public fact
+  set_fact:
+    rke2_api_ip: groups.servers.0
+    
 - name: Populate services facts
   ansible.builtin.service_facts:
   when:
@@ -39,3 +43,8 @@
   when:
     - inventory_hostname != groups.servers.0
     - active_node is defined
+
+- name: Custom installation
+  include_tasks: custom_installation.yaml
+  when:
+    - inventory_hostname == groups.servers.0
