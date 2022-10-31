@@ -7,8 +7,7 @@ token: {{ rke2_token }}
 node-taint:
   - "CriticalAddonsOnly=true:NoExecute"
 {% endif %}
-tls-san:
-  - cluster.local
+
 {% if rke2_api_ip is defined %}
   - {{ rke2_api_ip }}
 {% endif %}
@@ -28,4 +27,8 @@ cluster-cidr: {{ rke2_cluster_cidr }}
 service-cidr: {{ rke2_service_cidr}}
 {% endif %}
 disable-cloud-controller: {{ rke2_disable_cloud_controller }}
+{% endif %}
+{% if rke2_type == 'server' %}
+tls-san:
+  - cluster.local
 {% endif %}
