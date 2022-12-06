@@ -1,26 +1,58 @@
-- name: Link kubectl as k
-  shell: ln -s /var/lib/rancher/rke2/bin/kubectl /usr/bin/k
+- name: Create a symbolic link for kubectl as k
+  file:
+    src: /var/lib/rancher/rke2/bin/kubectl
+    dest: /usr/bin/k
+    state: link
 
-- name: Link kubectl as kubectl
-  shell: ln -s /var/lib/rancher/rke2/bin/kubectl /usr/bin/kubectl
+- name: Create a symbolic link for kubectl as kubectl
+  file:
+    src: /var/lib/rancher/rke2/bin/kubectl
+    dest: /usr/bin/kubectl
+    state: link
 
-- name: Add KUBECONFIG to bashrc
-  shell: echo "export KUBECONFIG=/etc/rancher/rke2/rke2.yaml">>/root/.bashrc
+- name: Create a .kube directory if does not exists
+  ansible.builtin.file:
+    path: ~/.kube
+    state: directory
+    mode: '0700'
+
+- name: Create a symbolic link for kubeconfig
+  file:
+    src: /etc/rancher/rke2/rke2.yaml
+    dest: ~/.kube/config
+    state: link
 
 - name: Install helm 
   shell: curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
+  args:
+    creates: /usr/local/bin/helm
 
-- name: Download Kubectx
-  shell: git clone https://github.com/ahmetb/kubectx /opt/kubectx
+- name: Clone kubectl
+  git:
+    repo: https://github.com/ahmetb/kubectx
+    dest: /opt/kubectx
 
-- name: Link kubectx
-  shell: ln -s /opt/kubectx/kubectx /usr/local/bin/kubectx
+- name: Create a symbolic link for kubectx as kubectx
+  file:
+    src: /opt/kubectx/kubectx
+    dest: /usr/local/bin/kubectx
+    state: link
 
-- name: Link kubectx as kx
-  shell: ln -s /opt/kubectx/kubectx /usr/local/bin/kx
+- name: Create a symbolic link for kubectx as kx
+  file:
+    src: /opt/kubectx/kubectx
+    dest: /usr/local/bin/kx
+    state: link
 
-- name: Link kubens
-  shell: ln -s /opt/kubectx/kubens /usr/local/bin/kubens
+- name: Create a symbolic link for kubens as kubens
+  file:
+    src: /opt/kubectx/kubens
+    dest: /usr/local/bin/kubens
+    state: link
 
-- name: Link kubens as kn
-  shell: ln -s /opt/kubectx/kubens /usr/local/bin/kn
+- name: Create a symbolic link for kubectx as kn
+  file:
+    src: /opt/kubectx/kubens
+    dest: /usr/local/bin/kn
+    state: link
+
