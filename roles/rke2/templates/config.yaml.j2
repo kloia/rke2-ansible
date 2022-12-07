@@ -31,4 +31,7 @@ disable-cloud-controller: {{ rke2_disable_cloud_controller }}
 {% if rke2_type == 'server' %}
 tls-san:
   - cluster.local
+{% for host in groups['servers'] %}
+  - {{ host }}
+{% endfor %}
 {% endif %}
