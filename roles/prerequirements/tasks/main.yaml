@@ -98,7 +98,6 @@
     state: present
     reload: yes
 
-
 - name: Enable bridge ipv4
   sysctl:
     name: net.bridge.bridge-nf-call-iptables
@@ -106,7 +105,6 @@
     sysctl_set: yes
     state: present
     reload: yes
-
   
 - name:  Enable bridge ipv6
   sysctl:
@@ -133,14 +131,32 @@
       create 0644 root root
       }
 
-- name: Configure rke2 prerequirements
-  blockinfile:
-    path: /etc/modules-load.d/k8s.conf
-    create: true
-    block: |
-      {
-      vm.panic_on_oom=0
-      vm.overcommit_memory=1
-      kernel.panic=10
-      kernel.panic_on_oops=1
-      }
+- name: Set vm.panic_on_oom to 0
+  sysctl:
+    name: vm.panic_on_oom
+    value: '0'
+
+- name: Set vm.overcommit_memory to 1
+  sysctl:
+    name: vm.overcommit_memory
+    value: '1'
+
+- name: Set kernel.panic to 10
+  sysctl:
+    name: kernel.panic
+    value: '10'
+
+- name: Set kernel.panic_on_oops to 1
+  sysctl:
+    name: kernel.panic_on_oops
+    value: '1'
+
+- name: Disable SWAP (swapoff)(1/2)
+  shell: |
+    swapoff -a
+
+- name: Disable SWAP (Remove fstab  entry)(1/2)
+  lineinfile:
+    path: '/etc/fstab'
+    regexp: '\sswap\s'
+    state: 'absent'
