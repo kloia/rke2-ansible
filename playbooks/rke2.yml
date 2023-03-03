@@ -2,6 +2,7 @@
   become: true
   gather_facts: true
   roles:
+    - prerequirements
     - pre
     - rke2
     - post
