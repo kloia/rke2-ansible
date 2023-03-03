@@ -160,3 +160,22 @@
     path: '/etc/fstab'
     regexp: '\sswap\s'
     state: 'absent'
+
+- name: Disable SELinux
+  ansible.posix.selinux:
+    state: disabled
+  when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux' or ansible_distribution == 'Redhat'
+
+- name: Stop apparmor
+  service:
+    name: apparmor
+    state: stopped
+  failed_when: false
+  when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+
+- name: Disable apparmor
+  service:
+    name: apparmor
+    enabled: false
+  failed_when: false
+  when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
