@@ -1,0 +1,29 @@
+
+- name: Run rke2 uninstall script
+  shell: sh /usr/local/bin/rke2-uninstall.sh
+  args:
+    removes: /usr/local/bin/rke2-uninstall.sh
+
+- name: Delete related directories
+  file:
+    state: absent
+    path: "{{ item }}"
+  with_items: 
+    - /etc/ceph
+    - /etc/cni
+    - /etc/kubernetes
+    - /etc/rancher
+    - /opt/cni
+    - /opt/rke
+    - /run/secrets/kubernetes.io
+    - /run/calico
+    - /run/flannel
+    - /var/lib/calico
+    - /var/lib/etcd
+    - /var/lib/cni
+    - /var/lib/kubelet
+    - /var/lib/rancher
+    - /var/log/containers
+    - /var/log/kube-audit
+    - /var/log/pods
+    - /var/run/calico

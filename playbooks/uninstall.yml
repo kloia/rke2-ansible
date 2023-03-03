@@ -1,0 +1,7 @@
+- hosts: servers,agents
+  become: true
+  gather_facts: true
+  roles:
+    - uninstall
+  vars_files:
+    - ../vars/general-config.yml
