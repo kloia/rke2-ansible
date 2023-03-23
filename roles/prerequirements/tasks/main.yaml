@@ -1,14 +1,14 @@
 - name: Add pam_limits.so to common-session
   blockinfile:
     path: /etc/pam.d/common-session
-    create: false
+    create: yes
     block: |
       session required pam_limits.so
 
 - name: Add pam_limits.so to common-session-noninteractive
   blockinfile:
     path: /etc/pam.d/common-session-noninteractive
-    create: false
+    create: yes
     block: |
       session required pam_limits.so
 
