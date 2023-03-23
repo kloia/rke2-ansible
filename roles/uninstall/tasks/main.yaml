@@ -4,6 +4,21 @@
   args:
     removes: /usr/local/bin/rke2-uninstall.sh
 
+- name: Stop&disable rancher-system-agent
+  systemd:
+    enabled: false
+    state: stopped
+    name: rancher-system-agent
+  
+- name: Systemd reload
+  ansible.builtin.systemd:
+    daemon_reload: true
+
+- name: Remove rancher-system-agent
+  file:
+    path: /etc/systemd/system/rancher-system-agent.service
+    state: absent
+
 - name: Delete related directories
   file:
     state: absent
