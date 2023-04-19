@@ -20,8 +20,11 @@ rke2_channel: stable
 # RKE2 repository URL
 rke2_channel_url: https://update.rke2.io/v1-release/channels
 
-# HA mode - disabled, keepalived, external LB (aws, gcp, azure or different LB's)
+# HA mode - disabled, keepalived, external (aws, gcp, azure or different LB's)
 rke2_lb_mode: disabled
+
+# External LB DNS/IP address - If you select HA mode external than you must set rke2_lb_addr
+# rke2_lb_addr: external-lb-address
 
 # API Server port
 rke2_apiserver_port: 6443

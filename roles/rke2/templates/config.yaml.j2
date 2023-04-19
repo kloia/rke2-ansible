@@ -1,4 +1,6 @@
-{% if active_node is defined %}
+{% if active_node is defined and rke2_lb_mode == 'external' %}
+server: https://{{ rke2_lb_addr }}:9345
+{% elif active_node is defined %}
 server: https://{{ rke2_api_ip }}:9345
 {% endif %}
 token: {{ rke2_token }}
