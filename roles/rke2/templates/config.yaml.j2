@@ -1,4 +1,6 @@
-{% if active_node is defined %}
+{% if active_node is defined and rke2_lb_mode == 'external' %}
+server: https://{{ rke2_lb_addr }}:9345
+{% elif active_node is defined %}
 server: https://{{ rke2_api_ip }}:9345
 {% endif %}
 token: {{ rke2_token }}
@@ -31,6 +33,9 @@ disable-cloud-controller: {{ rke2_disable_cloud_controller }}
 {% if rke2_type == 'server' %}
 tls-san:
   - cluster.local
+{% if rke2_lb_mode == 'external' %}
+  - {{ rke2_lb_addr }}
+{% endif %}
 {% for host in groups['servers'] %}
   - {{ host }}
 {% endfor %}
