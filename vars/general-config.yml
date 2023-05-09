@@ -26,6 +26,9 @@ rke2_lb_mode: disabled
 # External LB DNS/IP address - If you select HA mode external than you must set rke2_lb_addr
 # rke2_lb_addr: external-lb-address
 
+# Use cilium CNI. If this variable not set, default cni will be used.
+rke2_cni: cilium
+
 # API Server port
 rke2_apiserver_port: 6443
 
@@ -35,7 +38,7 @@ rke2_apiserver_port: 6443
 # Pre-shared secret token for node registration
 rke2_token: defaultSecret12345
 
-# Do not deploy components or delete any components - rke2-canal, rke2-coredns, rke2-ingress-nginx, rke2-kube-proxy, rke2-metrics-server
+# Do not deploy components or delete any components - rke2-canal, rke2-coredns, rke2-ingress-nginx, rke2-metrics-server
 rke2_disabled_components:
 
 # Custom manifests path for RKE2 installation

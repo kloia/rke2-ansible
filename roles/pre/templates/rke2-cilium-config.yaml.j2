@@ -1,0 +1,19 @@
+# /var/lib/rancher/rke2/server/manifests/rke2-cilium-config.yaml
+apiVersion: helm.cattle.io/v1
+kind: HelmChartConfig
+metadata:
+  name: rke2-cilium
+  namespace: kube-system
+spec:
+  valuesContent: |-
+    kubeProxyReplacement: strict
+{% if rke2_lb_mode == 'external' %}
+    k8sServiceHost: {{ rke2_lb_addr }}
+{% else %}
+    k8sServiceHost: {{ rke2_api_ip }}
+{% endif %}
+    k8sServicePort: {{ rke2_apiserver_port }}
+    cni:
+      chainingMode: "none"
+    bpf:
+      masquerade: true

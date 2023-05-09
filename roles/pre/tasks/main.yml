@@ -7,6 +7,10 @@
     - inventory_hostname is in groups.servers
     - rke2_lb_mode
 
+- name: public fact
+  set_fact:
+    rke2_api_ip: groups.servers.0
+
 - name: Populate services facts
   ansible.builtin.service_facts:
 
@@ -34,6 +38,15 @@
   when: (rke2_version != ( installed_rke2_version.stdout | default({})))
         or installed_rke2_version is not defined
 
+- name: Create a directory if it does not exist
+  ansible.builtin.file:
+    path: /var/lib/rancher/rke2/server/manifests
+    state: directory
+    owner: root
+    group: root
+    mode: '0744'
+  when: rke2_cni
+
 - name: Copy Custom Manifests
   ansible.builtin.copy:
     src: "{{ item }}"
@@ -43,3 +56,12 @@
     mode: 0644
   with_items: "{{ rke2_custom_manifests_path }}"
   when: rke2_custom_manifests_path
+
+- name: Copy Cilium HelmChart Configs
+  ansible.builtin.template:
+    src: rke2-cilium-config.yaml.j2
+    dest: /var/lib/rancher/rke2/server/manifests/rke2-cilium-config.yaml
+    owner: root
+    group: root
+    mode: 0644
+  when: rke2_cni

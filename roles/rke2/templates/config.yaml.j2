@@ -15,7 +15,10 @@ node-taint:
 {% endif %}
 {% endif %}
 {% if rke2_disabled_components and ( inventory_hostname|string() in groups['servers'] ) %}
-disable: {{ rke2_disable }}
+disable:
+{% for component in rke2_disabled_components %}
+  - {{ component }}
+{% endfor %}
 {% endif %}
 {% if rke2_apiserver_args is defined and ansible_fqdn in groups['servers'] %}
 kube-apiserver-arg: {{ rke2_apiserver_args}}
@@ -39,4 +42,9 @@ tls-san:
 {% for host in groups['servers'] %}
   - {{ host }}
 {% endfor %}
+{% endif %}
+{% if rke2_cni == 'cilium'%}
+cni: 
+- cilium
+disable-kube-proxy: true
 {% endif %}
