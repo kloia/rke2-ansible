@@ -9,10 +9,12 @@
 
 - name: public fact
   set_fact:
-    rke2_api_ip: groups.servers.0
+    rke2_api_ip: "{{ groups.servers.0 }}"
 
 - name: Populate services facts
   ansible.builtin.service_facts:
+  when:
+    - rke2_lb_mode
 
 - name: Check RKE2 version
   ansible.builtin.shell: |
