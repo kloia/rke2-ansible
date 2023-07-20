@@ -12,7 +12,7 @@ ssh_key_path: /app/id_rsa
 rke2_method: tar
 
 # RKE2 version 
-rke2_version: v1.21.5+rke2r2
+rke2_version: v1.24.12+rke2r1
 
 # RKE2 channel
 rke2_channel: stable
