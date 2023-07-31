@@ -1,0 +1,9 @@
+apiVersion: certificates.k8s.io/v1
+kind: CertificateSigningRequest
+metadata:
+    name: {{ admin_username }}
+spec:
+    request: {{ certificate_signing_request }}
+    signerName: kubernetes.io/kube-apiserver-client
+    usages:
+    - client auth
