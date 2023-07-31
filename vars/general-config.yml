@@ -61,3 +61,9 @@ rke2_service_cidr: 10.43.0.0/16
 
 # Override default rke2 cloud controller
 rke2_disable_cloud_controller: false
+
+# Create additional admin user
+create_admin_user: false
+
+# Additional admin username
+admin_username: rke2AnsibleAdmin

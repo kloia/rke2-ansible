@@ -5,6 +5,13 @@
     - prerequirements
     - pre
     - rke2
+  vars_files:
+    - ../vars/general-config.yml
+
+- hosts: "{{ groups.servers.0 }}"
+  become: true
+  gather_facts: true
+  roles:
     - post
   vars_files:
     - ../vars/general-config.yml

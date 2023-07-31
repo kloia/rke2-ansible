@@ -1,0 +1,107 @@
+- name: public fact
+  set_fact:
+    rke2_api_ip: "{{ groups.servers.0 }}"
+
+- name: Populate services facts
+  ansible.builtin.service_facts:
+  when:
+    - rke2_lb_mode
+
+- name: Generate an OpenSSL private key for administrator user
+  community.crypto.openssl_privatekey:
+    path: "{{ admin_username }}.key"
+    size: 2048
+
+- name: Create certificate signing request for administrator user key
+  community.crypto.openssl_csr:
+    path: "{{ admin_username }}.csr"
+    privatekey_path: "{{ admin_username }}.key"
+    common_name: "{{ admin_username }}"
+
+- name: Set fact base64 encoded csr
+  shell: cat {{ admin_username }}.csr
+  register: csr
+
+- set_fact: 
+    certificate_signing_request: "{{ csr.stdout | b64encode }}"
+
+- name: Copy csr.yaml
+  ansible.builtin.template:
+    src: templates/csr.yaml.j2
+    dest: ./csr.yaml
+    owner: root
+    group: root
+    mode: 0600
+
+- name: Create certificateSigningRequest for administrator user
+  shell: kubectl apply -f ./csr.yaml
+
+- name: Approve certificateSigningRequest for administrator user
+  shell: kubectl certificate approve {{ admin_username }}
+
+- name: Set permission to {{ admin_username }}
+  shell: kubectl create clusterrolebinding {{ admin_username }} --clusterrole=cluster-admin --user {{ admin_username }} --dry-run=client -o yaml | kubectl apply -f -
+
+- name: Approve certificateSigningRequest for administrator user
+  shell: kubectl get csr {{ admin_username }} -o jsonpath='{.status.certificate}'
+  register: admin_user_cert
+
+- name: Write admin user cert to "{{ groups.servers.0 }}"
+  copy: 
+    content: "{{admin_user_cert.stdout | b64decode}}"
+    dest: "{{ admin_username }}.crt"
+
+- name: Get CA cert
+  shell: kubectl get cm kube-root-ca.crt -o jsonpath='{.data.ca\.crt'}
+  register: ca_cert
+
+- name: Get CA cert
+  copy: 
+    content: "{{ca_cert.stdout}}"
+    dest: ca.crt
+
+- name: Write admin user cert to "{{ groups.servers.0 }}"
+  shell: kubectl config set-credentials {{ admin_username }} --client-key={{ admin_username }}.key --client-certificate={{ admin_username }}.crt --embed-certs=true
+  environment: 
+    KUBECONFIG: /root/{{ admin_username }}_kubeconfig
+
+- name: Write admin user cert to "{{ groups.servers.0 }}"
+  shell: kubectl config set-cluster default --certificate-authority=ca.crt --server=https://{{ rke2_api_ip }}:6443 --embed-certs=true
+  environment: 
+    KUBECONFIG: /root/{{ admin_username }}_kubeconfig
+
+- name: Set default context
+  shell: kubectl config set-context default --user {{ admin_username }} --cluster default 
+  environment: 
+    KUBECONFIG: /root/{{ admin_username }}_kubeconfig
+
+- name: Use default context
+  shell: kubectl config use-context default
+  environment: 
+    KUBECONFIG: /root/{{ admin_username }}_kubeconfig
+
+- name: Fetch kubeconfig
+  fetch:
+    src: /root/{{ admin_username }}_kubeconfig
+    dest: ../{{ admin_username }}_kubeconfig
+    flat: true
+
+- name: Delete csr.yaml
+  file:
+    path: "./csr.yaml"
+    state: absent
+
+- name: Delete {{ admin_username }} certificate from host [1/3]
+  file:
+    path: "{{ admin_username }}.key"
+    state: absent
+
+- name: Delete {{ admin_username }} certificate from host [2/3]
+  file:
+    path: "{{ admin_username }}.crt"
+    state: absent
+
+- name: Delete {{ admin_username }} certificate from host [3/3]
+  file:
+    path: "ca.crt"
+    state: absent
