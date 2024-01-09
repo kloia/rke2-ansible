@@ -3,9 +3,8 @@
 - name: Install Keepalived when HA mode is enabled
   include_tasks: keepalived.yml
   when:
-    - rke2_api_ip is defined
-    - inventory_hostname is in groups.servers
-    - rke2_lb_mode
+    - rke2_lb_addr is defined
+    - rke2_lb_mode == "keepalived"
 
 - name: public fact
   set_fact:
@@ -47,7 +46,6 @@
     owner: root
     group: root
     mode: '0744'
-  when: rke2_cni
 
 - name: Copy Custom Manifests
   ansible.builtin.copy:
@@ -66,4 +64,4 @@
     owner: root
     group: root
     mode: 0644
-  when: rke2_cni
+  when: rke2_cni is defined and rke2_cni == 'cilium'

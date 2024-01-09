@@ -38,7 +38,7 @@ vrrp_instance VI_1 {
 ### The following entry is the VRRP config for the incomming interface ###
 
         virtual_ipaddress {
-            {{ rke2_api_ip }}
+            {{ rke2_lb_addr }}
     }
         track_script {
        check

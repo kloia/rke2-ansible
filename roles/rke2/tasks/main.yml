@@ -11,7 +11,7 @@
 
 - name: Run RKE2 script
   ansible.builtin.shell:
-    cmd: /tmp/rke2.sh
+    cmd: bash /tmp/rke2.sh
   environment:
     INSTALL_RKE2_VERSION: "{{ rke2_version }}"
     INSTALL_RKE2_CHANNEL_URL: "{{ rke2_channel_url }}"
@@ -36,7 +36,7 @@
   ansible.builtin.set_fact:
     active_node: "{{ inventory_hostname }}"
     rke2_api_ip: "{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}"
-  run_once: yes
+  run_once: true
 
 - name: Prepare and join nodes of the cluster
   include_tasks: join_node.yml

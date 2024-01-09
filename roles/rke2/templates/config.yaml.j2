@@ -1,7 +1,9 @@
-{% if active_node is defined and rke2_lb_mode == 'external' %}
+{% if active_node is defined %}
+{% if rke2_lb_mode == 'external' or rke2_lb_mode == 'keepalived'%}
 server: https://{{ rke2_lb_addr }}:9345
-{% elif active_node is defined %}
+{% else %}
 server: https://{{ rke2_api_ip }}:9345
+{% endif %}
 {% endif %}
 token: {{ rke2_token }}
 {% if ansible_fqdn in groups['servers'] %}
@@ -36,14 +38,14 @@ disable-cloud-controller: {{ rke2_disable_cloud_controller }}
 {% if rke2_type == 'server' %}
 tls-san:
   - cluster.local
-{% if rke2_lb_mode == 'external' %}
+{% if rke2_lb_mode == 'external' or rke2_lb_mode == 'keepalived'%}
   - {{ rke2_lb_addr }}
 {% endif %}
 {% for host in groups['servers'] %}
   - {{ host }}
 {% endfor %}
 {% endif %}
-{% if rke2_cni == 'cilium'%}
+{% if rke2_cni is defined and  rke2_cni == 'cilium'%}
 cni: 
 - cilium
 disable-kube-proxy: true
