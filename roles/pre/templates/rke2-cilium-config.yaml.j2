@@ -6,7 +6,7 @@ metadata:
   namespace: kube-system
 spec:
   valuesContent: |-
-    kubeProxyReplacement: strict
+    kubeProxyReplacement: true
 {% if rke2_lb_mode == 'external' or rke2_lb_mode == 'keepalived' %}
     k8sServiceHost: {{ rke2_lb_addr }}
 {% else %}

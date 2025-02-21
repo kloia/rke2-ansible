@@ -3,16 +3,16 @@
 # node(s) specifications can be defined in inventory file
 
 # SSH user
-ssh_user: ubuntu
+ssh_user: rhel
 
 # SSH Key
-ssh_key_path: /app/id_rsa
+ssh_key_path: /Users/ourhan/.ssh/omer-key
 
 # RKE2 installation method (for cross installation, only supports tar)
 rke2_method: tar
 
 # RKE2 version 
-rke2_version: v1.24.12+rke2r1
+rke2_version: v1.31.5+rke2r1
 
 # RKE2 channel
 rke2_channel: stable
@@ -21,10 +21,10 @@ rke2_channel: stable
 rke2_channel_url: https://update.rke2.io/v1-release/channels
 
 # HA mode - disabled, keepalived, external (aws, gcp, azure or different LB's)
-rke2_lb_mode: disabled
+rke2_lb_mode: keepalived
 
 # External LB DNS/IP address - If you select HA mode external than you must set rke2_lb_addr
-# rke2_lb_addr: external-lb-address
+rke2_lb_addr: 192.168.0.50
 
 # Use cilium CNI. If this variable not set, default cni will be used.
 rke2_cni: cilium
