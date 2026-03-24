@@ -1,0 +1,27 @@
+---
+
+# Upgrade RKE2 cluster to the version defined in vars/general-config.yml (rke2_version)
+# Usage: ansible-playbook playbooks/upgrade.yml
+# Override version: ansible-playbook playbooks/upgrade.yml -e rke2_version=v1.32.0+rke2r1
+
+- hosts: servers
+  become: true
+  gather_facts: false
+  serial: 1
+  vars:
+    rke2_type: server
+  roles:
+    - upgrade
+  vars_files:
+    - ../vars/general-config.yml
+
+- hosts: agents
+  become: true
+  gather_facts: false
+  serial: 1
+  vars:
+    rke2_type: agent
+  roles:
+    - upgrade
+  vars_files:
+    - ../vars/general-config.yml
