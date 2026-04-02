@@ -46,7 +46,6 @@ tls-san:
 {% endfor %}
 {% endif %}
 {% if rke2_cni is defined and  rke2_cni == 'cilium'%}
-cni: 
-- cilium
+cni: cilium
 disable-kube-proxy: true
 {% endif %}

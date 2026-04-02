@@ -1,0 +1,51 @@
+---
+
+- name: Check current RKE2 version
+  ansible.builtin.shell: |
+    set -o pipefail
+    /usr/local/bin/rke2 --version | grep -E "rke2 version" | awk '{print $3}'
+  args:
+    executable: /bin/bash
+  changed_when: false
+  register: installed_rke2_version
+  ignore_errors: true
+
+- name: Skip if already on target version
+  ansible.builtin.meta: end_host
+  when: installed_rke2_version.stdout == rke2_version
+
+- name: Download RKE2 install script
+  ansible.builtin.get_url:
+    url: https://get.rke2.io
+    dest: /tmp/rke2.sh
+    mode: '0700'
+    force: true
+
+- name: Run RKE2 install script
+  ansible.builtin.shell:
+    cmd: bash /tmp/rke2.sh
+  environment:
+    INSTALL_RKE2_VERSION: "{{ rke2_version }}"
+    INSTALL_RKE2_CHANNEL_URL: "{{ rke2_channel_url }}"
+    INSTALL_RKE2_CHANNEL: "{{ rke2_channel }}"
+    INSTALL_RKE2_METHOD: "{{ rke2_method }}"
+    INSTALL_RKE2_TYPE: "{{ rke2_type }}"
+
+- name: Restart RKE2 service
+  ansible.builtin.systemd:
+    name: "rke2-{{ rke2_type }}.service"
+    state: restarted
+    daemon_reload: true
+
+- name: Wait for node to be Ready
+  ansible.builtin.shell: |
+    set -o pipefail
+    /var/lib/rancher/rke2/bin/kubectl --kubeconfig /etc/rancher/rke2/rke2.yaml get nodes | grep " Ready" | wc -l
+  args:
+    executable: /bin/bash
+  changed_when: false
+  register: ready_nodes
+  until: ready_nodes.stdout | int >= (groups['servers'] | length + (groups['agents'] | default([]) | length))
+  retries: 40
+  delay: 15
+  delegate_to: "{{ groups['servers'][0] }}"
